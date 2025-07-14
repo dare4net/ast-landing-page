@@ -48,29 +48,29 @@ export default function RootLayout({ children }) {
 
         {/* OpenGraph & Social Meta Tags */}
         <title>After-school.tech - Discover, Learn & Create</title>
-        <meta name="description" content="A modern platform for kids to learn technology skills after school" />
+        <meta name="description" content="Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace. Learn, earn badges, and level up your tech skills after school!" />
         {/* Facebook Meta Tags */}
         <meta property="og:url" content="https://after-school.tech/" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="After-school.tech - Discover, Learn & Create" />
-        <meta property="og:description" content="A modern platform for kids to learn technology skills after school" />
-        <meta property="og:image" content="/logo -sq.png" />
+        <meta property="og:title" content="AST - Discover, Learn & Create" />
+        <meta property="og:description" content="Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace. Learn, earn badges, and level up your tech skills after school!" />
+        <meta property="og:image" content="https://after-school.tech/logo%20-sq.png" />
         {/* Twitter Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://after-school.tech/" />
-        <meta name="twitter:title" content="After-school.tech - Discover, Learn & Create" />
-        <meta name="twitter:description" content="A modern platform for kids to learn technology skills after school" />
-        <meta name="twitter:image" content="/logo -sq.png" />
+        <meta name="twitter:title" content="AST - Discover, Learn & Create" />
+        <meta name="twitter:description" content="Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace. Learn, earn badges, and level up your tech skills after school!" />
+        <meta name="twitter:image" content="https://after-school.tech/logo%20-sq.png" />
 
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
-        <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" href="/After School-web512x512.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/After School-web512x512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/After School-web512x512.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/After School-web512x512.png" />
 
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/After School-web512x512.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/After School-web512x512.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+        <link rel="shortcut icon" href="/After School-web512x512.png" />
       </head>
       <body className={`${poppins.className} font-sans`}>
         {children}

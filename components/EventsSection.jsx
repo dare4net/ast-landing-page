@@ -6,21 +6,21 @@ import theme from "@/styles/theme"
 export default function EventsSection() {
   const events = [
     {
-      image: "/AST atp poster.png",
+      image: "/AST atp poster.webp",
       date: "Upcoming!",
       title: "Accelerator Tech Program",
       description:
         "A fast-paced program designed to accelerate learning in specific tech areas. Perfect for kids who want to dive deeper into their favorite subjects.",
     },
     {
-      image: "/Beta Testing - colored.png",
+      image: "/Beta Testing - colored.webp",
       date: "20 Jul, 2025",
       title: "AST Beta Testing Event",
       description:
         "Join us for the AST Beta Testing Event where everyone can participate in testing new features and providing feedback to shape the future of After-school.tech.",
     },
     {
-      image: "/AST Logo Reveal.png",
+      image: "/AST Logo Reveal.webp",
       date: "21 June, 2025",
       title: "Logo Reveal - a deep dive into AST",
       description:
@@ -44,7 +44,15 @@ export default function EventsSection() {
           {events.map((event, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="aspect-[4/3] relative">
-                <Image src={event.image || "/placeholder.svg"} alt={event.title} fill className="object-cover" />
+                <Image 
+                  src={event.image || "/placeholder.svg"} 
+                  alt={event.title} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  quality={85}
+                  className="object-cover"
+                  loading="lazy"
+                />
               </div>
               <CardContent className="pt-6">
                 <div

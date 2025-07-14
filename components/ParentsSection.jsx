@@ -63,10 +63,13 @@ export default function ParentsSection() {
           <div className="relative">
             <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden relative">
               <Image
-                src="/AST Feature Tiles 2.png"
+                src="/AST Feature Tiles 2.webp"
                 alt="Video thumbnail"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={85}
                 className="object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <button

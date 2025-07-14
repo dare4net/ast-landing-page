@@ -14,19 +14,22 @@ export default function HeroCarousel() {
       title: "This Isn't Just Tech Learning, It's Their Launchpad",
       description:
         "We don't just keep kids busy online. We equip them with real tech skills that spark curiosity and build confidence for the future.",
-      image: "/placeholder.svg?height=600&width=1200&text=Tech+Learning",
+      image: "/launchpad.webp",
+      blurDataURL: "data:image/jpeg;base64,/9j...", // You'll get this from the optimize-images script
     },
     {
       title: "Help Your Child Grow Beyond the Classroom",
       description:
         "From code to design, our hands-on curriculum turns play into purpose and screen time into skill time.",
-      image: "/placeholder.svg?height=600&width=1200&text=Child+Growth",
+      image: "/parents.webp",
+      blurDataURL: "data:image/jpeg;base64,/9j...", // You'll get this from the optimize-images script
     },
     {
       title: "Designed for Schools and Communities That Believe in Early Innovation",
       description:
         "We work with schools and organizations to deliver fun and impactful tech programs that evolve with every learner.",
-      image: "/placeholder.svg?height=600&width=1200&text=Schools+and+Communities",
+      image: "/organizations.webp",
+      blurDataURL: "data:image/jpeg;base64,/9j...", // You'll get this from the optimize-images script
     },
   ]
 
@@ -79,8 +82,13 @@ export default function HeroCarousel() {
             src={slide.image || "/placeholder.svg"}
             alt={slide.title}
             fill
+            sizes="100vw"
+            quality={85}
             className="object-cover"
             priority={index === 0}
+            loading={index === 0 ? "eager" : "lazy"}
+            placeholder="blur"
+            blurDataURL={slide.blurDataURL}
           />
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
