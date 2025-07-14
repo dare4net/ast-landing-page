@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import theme from "@/styles/theme"
+import { motion } from "framer-motion"
 
 export default function EventsSection() {
   const events = [
@@ -40,40 +41,90 @@ export default function EventsSection() {
           <p className="text-gray-600">Register Promptly for Upcoming Events</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid md:grid-cols-3 gap-8"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2
+              }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {events.map((event, index) => (
-            <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-[4/3] relative">
-                <Image 
-                  src={event.image || "/placeholder.svg"} 
-                  alt={event.title} 
-                  fill 
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  quality={85}
-                  className="object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <CardContent className="pt-6">
-                <div
-                  className="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm mb-4"
-                  style={{
-                    backgroundColor: theme.colors.primary[100],
-                    color: theme.colors.primary[800],
-                  }}
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1]
+                  }
+                }
+              }}
+            >
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                <motion.div 
+                  className="aspect-[4/3] relative"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {event.date}
-                </div>
-                <h3 className="text-xl font-bold mb-2">
-                  <Link href="#" className="hover:text-amber-500 transition-colors" style={{ color: "inherit" }}>
-                    {event.title}
-                  </Link>
-                </h3>
-                <p className="text-gray-600">{event.description}</p>
-              </CardContent>
-            </Card>
+                  <Image 
+                    src={event.image || "/placeholder.svg"} 
+                    alt={event.title} 
+                    fill 
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    quality={85}
+                    className="object-cover"
+                    loading="lazy"
+                  />
+                </motion.div>
+                <CardContent className="pt-6">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm mb-4"
+                    style={{
+                      backgroundColor: theme.colors.primary[100],
+                      color: theme.colors.primary[800],
+                    }}
+                  >
+                    {event.date}
+                  </motion.div>
+                  <motion.h3 
+                    className="text-xl font-bold mb-2"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <Link href="#" className="hover:text-amber-500 transition-colors" style={{ color: "inherit" }}>
+                      {event.title}
+                    </Link>
+                  </motion.h3>
+                  <motion.p 
+                    className="text-gray-600"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    {event.description}
+                  </motion.p>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+          
+        </motion.div>
+        
       </div>
     </section>
   )

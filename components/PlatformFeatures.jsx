@@ -1,5 +1,6 @@
 import { Monitor, Palette, Blocks, Smartphone, Bot, LayoutDashboard } from "lucide-react"
 import theme from "@/styles/theme"
+import { motion } from "framer-motion"
 
 export default function PlatformFeatures() {
   const features = [
@@ -53,31 +54,104 @@ export default function PlatformFeatures() {
   return (
     <section id="features" className="py-16 md:py-24 bg-white">
       <div className="container">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Platform Features</h2>
-          <div
+        <motion.div 
+          className="text-center max-w-3xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Platform Features
+          </motion.h2>
+          <motion.div
             className="w-24 h-1 bg-amber-500 mx-auto mb-6"
             style={{ backgroundColor: theme.colors.primary[500] }}
-          ></div>
-          <p className="text-gray-600">Powerful Tools, Simplified for Kids</p>
-        </div>
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          />
+          <motion.p 
+            className="text-gray-600"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            Powerful Tools, Simplified for Kids
+          </motion.p>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid md:grid-cols-3 gap-8"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15
+              }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={index}
-              className="p-6 border rounded-lg hover:shadow-lg transition-shadow"
+              className="p-6 border rounded-lg"
               style={{
                 borderRadius: theme.borderRadius.lg,
                 background: pastelColors[index % pastelColors.length],
               }}
+              variants={{
+                hidden: { opacity: 0, y: 20, scale: 0.95 },
+                show: { 
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1]
+                  }
+                }
+              }}
+              whileHover={{ 
+                scale: 1.03,
+                boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)",
+                transition: { duration: 0.3 }
+              }}
             >
-              {feature.icon}
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
-            </div>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                {feature.icon}
+              </motion.div>
+              <motion.h3 
+                className="text-xl font-bold mb-2"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                {feature.title}
+              </motion.h3>
+              <motion.p 
+                className="text-gray-600"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                {feature.description}
+              </motion.p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
