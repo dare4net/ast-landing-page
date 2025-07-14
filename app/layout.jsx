@@ -1,6 +1,7 @@
 import "./globals.css"
 import { Poppins } from "next/font/google"
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration"
+import GoogleAnalytics from "@/components/GoogleAnalytics"
 
 // Configure Poppins font with multiple weights
 const poppins = Poppins({
@@ -11,8 +12,22 @@ const poppins = Poppins({
 })
 
 export const metadata = {
-  title: "After-school.tech - Discover, Learn & Create",
-  description: "A modern platform for kids to learn technology skills after school",
+  metadataBase: new URL('https://after-school.tech'),
+  title: {
+    default: "After-school.tech - Discover, Learn & Create",
+    template: "%s | After-school.tech"
+  },
+  description: "Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace. Learn, earn badges, and level up your tech skills after school!",
+  keywords: [
+    "after school tech",
+    "kids coding",
+    "tech education",
+    "children programming",
+    "learn to code",
+    "kids technology",
+    "STEM education",
+    "online learning"
+  ],
   manifest: "/manifest.json",
   themeColor: "#f5aa31",
   appleWebApp: {
@@ -26,10 +41,48 @@ export const metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
+    maximumScale: 5,
   },
-    generator: 'v0.dev'
+  verification: {
+    google: "g-Q4YESWXQTM", // Replace this with your actual verification code from Google Search Console
+  },
+  alternates: {
+    canonical: "https://after-school.tech"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://after-school.tech',
+    siteName: 'After-school.tech',
+    title: 'After-school.tech - Discover, Learn & Create',
+    description: 'Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace.',
+    images: [
+      {
+        url: 'https://after-school.tech/After%20School-web512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'After-school.tech Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'After-school.tech - Discover, Learn & Create',
+    description: 'Afterschool.tech is a fun, gamified learning platform where kids aged 8+ explore coding, design, AI, animation, and more — all from any device, at their pace.',
+    images: ['https://after-school.tech/After%20School-web512x512.png'],
+    creator: '@afterschooltech'
+  }
 }
 
 export default function RootLayout({ children }) {
@@ -73,6 +126,7 @@ export default function RootLayout({ children }) {
         <link rel="shortcut icon" href="/After School-web512x512.png" />
       </head>
       <body className={`${poppins.className} font-sans`}>
+        <GoogleAnalytics />
         {children}
         <ServiceWorkerRegistration />
       </body>
