@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, type Variants, AnimatePresence } from 'framer-motion'
 import { createBetaInvite } from '@/lib/mock-api'
 import { Loader2 } from 'lucide-react'
 import {
@@ -65,6 +65,21 @@ const availabilityOptions = [
   { id: 'flexible', label: '10-20 hours/week' }
 ]
 
+const container: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const item: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1 }
+}
+
 export default function BetaInvitePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
@@ -114,21 +129,6 @@ export default function BetaInvitePage() {
     }
   }
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1 }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted p-8">
       <div className="max-w-2xl mx-auto">
@@ -139,7 +139,12 @@ export default function BetaInvitePage() {
         >
           <Card>
             <CardHeader>
-              <motion.div variants={item} className="space-y-2">
+              <motion.div
+                variants={item}
+                className="space-y-2"
+                initial="hidden"
+                animate="show"
+              >
                 <CardTitle>Beta Testing Application</CardTitle>
                 <CardDescription>
                   Help us shape the future of tech education. Tell us about yourself and your learning goals.
