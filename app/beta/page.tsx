@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { motion, AnimatePresence } from 'framer-motion'
+import type { HTMLMotionProps } from 'framer-motion'
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { createBetaSignup } from '@/lib/mock-api'
 import {
   Card,
@@ -24,6 +26,29 @@ interface FormData {
 
 const STORAGE_KEY = 'beta_form_data'
 const TOTAL_SPOTS = 200
+
+type MotionDivProps = HTMLMotionProps<"div"> & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
+const MotionDiv = motion.div as React.FC<MotionDivProps>
+
+interface ErrorAnimationProps {
+  message?: string;
+}
+
+const ErrorAnimation: React.FC<ErrorAnimationProps> = ({ message }) => {
+  if (!message) return null;
+  
+  return (
+    <MotionDiv
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      className="overflow-hidden"
+    >
+      <p className="text-sm text-destructive">{message}</p>
+    </MotionDiv>
+  );
+}
 
 export default function BetaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -80,14 +105,14 @@ export default function BetaPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted p-8">
-      <motion.div 
+      <MotionDiv 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
         className="w-full max-w-lg"
       >
         <Card>
           <CardHeader>
-            <motion.div
+            <MotionDiv
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -97,19 +122,19 @@ export default function BetaPage() {
               <CardDescription>
                 Join our exclusive beta testing program. Only {spotsLeft} spots remaining!
               </CardDescription>
-            </motion.div>
-            <motion.div
+            </MotionDiv>
+            <MotionDiv
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.4, ease: "easeOut" }}
               className="mt-4"
             >
               <Progress value={progress} className="h-2" />
-            </motion.div>
+            </MotionDiv>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} onChange={handleInputChange} className="space-y-4">
-              <motion.div
+              <MotionDiv
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
@@ -121,21 +146,12 @@ export default function BetaPage() {
                 />
                 <AnimatePresence mode="wait">
                   {errors.name && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-sm text-destructive">
-                        {errors.name.message}
-                      </p>
-                    </motion.div>
+                    <ErrorAnimation message={errors.name.message} />
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </MotionDiv>
               
-              <motion.div
+              <MotionDiv
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
@@ -154,21 +170,12 @@ export default function BetaPage() {
                 />
                 <AnimatePresence mode="wait">
                   {errors.email && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-sm text-destructive">
-                        {errors.email.message}
-                      </p>
-                    </motion.div>
+                    <ErrorAnimation message={errors.email.message} />
                   )}
                 </AnimatePresence>
-              </motion.div>
+              </MotionDiv>
 
-              <motion.div
+              <MotionDiv
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8 }}
@@ -189,11 +196,11 @@ export default function BetaPage() {
                     'Reserve My Spot'
                   )}
                 </Button>
-              </motion.div>
+              </MotionDiv>
             </form>
           </CardContent>
         </Card>
-      </motion.div>
+      </MotionDiv>
     </div>
   )
 }

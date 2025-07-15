@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
-import { motion, type Variants, AnimatePresence } from 'framer-motion'
+import { motion, type HTMLMotionProps, type Variants, AnimatePresence } from 'framer-motion'
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { createBetaInvite } from '@/lib/mock-api'
 import { Loader2 } from 'lucide-react'
 import {
@@ -80,6 +81,45 @@ const item: Variants = {
   show: { y: 0, opacity: 1 }
 }
 
+type MotionDivProps = HTMLMotionProps<"div"> & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
+const MotionDiv = motion.div as React.FC<MotionDivProps>
+
+interface AnimatedElementProps extends MotionDivProps {
+  children: React.ReactNode;
+  variants?: Variants;
+}
+
+const AnimatedElement: React.FC<AnimatedElementProps> = ({ children, variants, ...props }) => (
+  <MotionDiv
+    initial="hidden"
+    animate="show"
+    variants={variants}
+    {...props}
+  >
+    {children}
+  </MotionDiv>
+)
+
+interface ErrorAnimationProps {
+  message?: string;
+}
+
+const ErrorAnimation: React.FC<ErrorAnimationProps> = ({ message }) => {
+  if (!message) return null;
+  
+  return (
+    <MotionDiv
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      className="overflow-hidden"
+    >
+      <p className="text-sm text-destructive">{message}</p>
+    </MotionDiv>
+  );
+}
+
 export default function BetaInvitePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
@@ -132,28 +172,22 @@ export default function BetaInvitePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted p-8">
       <div className="max-w-2xl mx-auto">
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={container}
-        >
+        <AnimatedElement variants={container}>
           <Card>
             <CardHeader>
-              <motion.div
+              <AnimatedElement
                 variants={item}
                 className="space-y-2"
-                initial="hidden"
-                animate="show"
               >
                 <CardTitle>Beta Testing Application</CardTitle>
                 <CardDescription>
                   Help us shape the future of tech education. Tell us about yourself and your learning goals.
                 </CardDescription>
-              </motion.div>
+              </AnimatedElement>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <motion.div variants={item} className="space-y-4">
+                <AnimatedElement variants={item} className="space-y-4">
                   <div className="space-y-1">
                     <Input
                       placeholder="Full Name"
@@ -161,16 +195,7 @@ export default function BetaInvitePage() {
                       onChange={handleInputChange}
                     />
                     <AnimatePresence mode="wait">
-                      {errors.name && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <p className="text-sm text-destructive">{errors.name.message}</p>
-                        </motion.div>
-                      )}
+                      {errors.name && <ErrorAnimation message={errors.name.message} />}
                     </AnimatePresence>
                   </div>
                   
@@ -188,16 +213,7 @@ export default function BetaInvitePage() {
                       onChange={handleInputChange}
                     />
                     <AnimatePresence mode="wait">
-                      {errors.email && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <p className="text-sm text-destructive">{errors.email.message}</p>
-                        </motion.div>
-                      )}
+                      {errors.email && <ErrorAnimation message={errors.email.message} />}
                     </AnimatePresence>
                   </div>
 
@@ -254,16 +270,7 @@ export default function BetaInvitePage() {
                       onChange={handleInputChange}
                     />
                     <AnimatePresence mode="wait">
-                      {errors.goals && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <p className="text-sm text-destructive">{errors.goals.message}</p>
-                        </motion.div>
-                      )}
+                      {errors.goals && <ErrorAnimation message={errors.goals.message} />}
                     </AnimatePresence>
                   </div>
 
@@ -287,9 +294,9 @@ export default function BetaInvitePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                </motion.div>
+                </AnimatedElement>
 
-                <motion.div variants={item}>
+                <AnimatedElement variants={item}>
                   <Button 
                     type="submit" 
                     className="w-full" 
@@ -304,11 +311,11 @@ export default function BetaInvitePage() {
                       'Submit Application'
                     )}
                   </Button>
-                </motion.div>
+                </AnimatedElement>
               </form>
             </CardContent>
           </Card>
-        </motion.div>
+        </AnimatedElement>
       </div>
     </div>
   )

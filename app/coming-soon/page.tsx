@@ -7,7 +7,17 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Mail } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import type { HTMLMotionProps } from 'framer-motion'
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { addToWaitlist } from '@/lib/mock-api'
+
+type MotionDivProps = HTMLMotionProps<"div"> & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+type MotionHeadingProps = HTMLMotionProps<"h1"> & DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
+type MotionSpanProps = HTMLMotionProps<"span"> & DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>
+
+const MotionDiv = motion.div as React.FC<MotionDivProps>
+const MotionH1 = motion.h1 as React.FC<MotionHeadingProps>
+const MotionSpan = motion.span as React.FC<MotionSpanProps>
 
 interface FormData {
   email: string;
@@ -63,22 +73,22 @@ export default function ComingSoonPage() {
   }
 
   return (
-    <motion.div 
+    <MotionDiv 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted p-8"
     >
       <div className="text-center space-y-8 max-w-2xl mx-auto">
-        <motion.h1 
+        <MotionH1 
           initial={{ y: 20, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
           className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl"
         >
           Something Amazing is Coming
-        </motion.h1>
+        </MotionH1>
         
-        <motion.div 
+        <MotionDiv 
           initial={{ scale: 0.9, opacity: 0 }} 
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -90,7 +100,7 @@ export default function ComingSoonPage() {
             { value: timeLeft.minutes, label: 'Minutes' },
             { value: timeLeft.seconds, label: 'Seconds' }
           ].map((item, index) => (
-            <motion.div
+            <MotionDiv
               key={item.label}
               className="bg-background/50 backdrop-blur-sm p-4 rounded-lg"
               initial={{ y: 20, opacity: 0 }}
@@ -98,7 +108,7 @@ export default function ComingSoonPage() {
               transition={{ delay: 0.6 + index * 0.1 }}
             >
               <AnimatePresence mode="wait">
-                <motion.span
+                <MotionSpan
                   key={item.value}
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -106,12 +116,12 @@ export default function ComingSoonPage() {
                   className="text-3xl font-bold block"
                 >
                   {item.value}
-                </motion.span>
+                </MotionSpan>
               </AnimatePresence>
               <p className="text-sm text-muted-foreground">{item.label}</p>
-            </motion.div>
+            </MotionDiv>
           ))}
-        </motion.div>
+        </MotionDiv>
 
         <div className="max-w-md mx-auto w-full space-y-4">
           <p className="text-lg text-muted-foreground">
@@ -133,7 +143,16 @@ export default function ComingSoonPage() {
                 className="w-full"
               />
               {errors.email && (
-                <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                <AnimatePresence mode="wait">
+                  <MotionDiv
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                  </MotionDiv>
+                </AnimatePresence>
               )}
             </div>
             <Button type="submit" disabled={isSubmitting}>
@@ -143,6 +162,6 @@ export default function ComingSoonPage() {
           </form>
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
   )
 }

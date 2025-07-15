@@ -1,7 +1,25 @@
+// Types
+interface BetaSignup {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface BetaInvite {
+  id: string;
+  name: string;
+  email: string;
+  course: string;
+  experience: string;
+  goals: string;
+  availability: string;
+  createdAt: Date;
+}
+
 // Mock database
-let waitlist = []
-let betaSignups = []
-let betaInvites = []
+let waitlist: string[] = []
+let betaSignups: BetaSignup[] = []
+let betaInvites: BetaInvite[] = []
 
 export async function addToWaitlist(email: string) {
   await simulateLatency()
