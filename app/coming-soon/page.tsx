@@ -48,7 +48,7 @@ export default function ComingSoonPage() {
 
   const calculateTimeLeft = () => {
     const now = new Date().getTime()
-    const targetDate = new Date().getTime() + (1000 * 365 * 24 * 60 * 60 * 1000) // 1000 years
+    const targetDate = new Date().getTime() + (20 * 24 * 60 * 60 * 1000) // 1000 years
     const difference = targetDate - now
 
     return {
