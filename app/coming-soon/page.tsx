@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast, Toaster } from '@/components/ui/use-toast'
 import { Mail } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
@@ -97,6 +97,7 @@ export default function ComingSoonPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+      
       <main className="flex-1 bg-gradient-to-b from-background to-muted">
         <MotionDiv 
           initial={{ opacity: 0 }} 
@@ -190,6 +191,7 @@ export default function ComingSoonPage() {
     </MotionDiv>
       </main>
       <Footer />
+      <Toaster />
     </div>
   )
 }

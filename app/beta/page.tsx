@@ -1,4 +1,6 @@
-'use client'
+"use client"
+
+
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,7 +11,7 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast, Toaster } from '@/components/ui/use-toast'
 import {
   Card,
   CardContent,
@@ -267,6 +269,7 @@ export default function BetaPage() {
         </MotionDiv>
       </main>
       <Footer />
+      <Toaster />
     </div>
   )
 }

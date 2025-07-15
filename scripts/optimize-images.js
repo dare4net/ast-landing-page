@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const PUBLIC_DIR = path.join(process.cwd(), 'public');
+const PUBLIC_DIR = path.join(process.cwd(), 'public/convert');
 const QUALITY = 80;
 
 // Optimize settings for different image types

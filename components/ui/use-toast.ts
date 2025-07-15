@@ -192,3 +192,4 @@ function useToast() {
 }
 
 export { useToast, toast }
+export { Toaster } from "@/components/ui/toaster"

@@ -1,11 +1,13 @@
 'use client'
 
+
+
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast, Toaster } from '@/components/ui/use-toast'
 import { motion, type HTMLMotionProps, type Variants, AnimatePresence } from 'framer-motion'
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { Loader2 } from 'lucide-react'
@@ -317,6 +319,7 @@ export default function BetaInvitePage() {
       </div>
       </main>
       <Footer />
+      <Toaster />
     </div>
   )
 }
