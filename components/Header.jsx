@@ -56,12 +56,15 @@ export default function Header() {
             <Link href="#contact" className="text-sm font-medium hover:text-amber-500 transition-colors font-poppins">
               Contact Us
             </Link>
-            <Button
-              className="bg-amber-500 hover:bg-amber-600 text-white font-poppins font-medium"
-              style={{ backgroundColor: theme.colors.primary[500] }}
-            >
-              Get Started
-            </Button>
+            <Link href="/coming-soon" passHref legacyBehavior>
+              <Button
+                className="bg-amber-500 hover:bg-amber-600 text-white font-poppins font-medium"
+                style={{ backgroundColor: theme.colors.primary[500] }}
+                as="a"
+              >
+                Get Started
+              </Button>
+            </Link>
           </nav>
         </div>
 
@@ -90,12 +93,15 @@ export default function Header() {
               <Link href="#contact" className="text-sm font-medium hover:text-amber-500 transition-colors font-poppins">
                 Contact Us
               </Link>
-              <Button
-                className="bg-amber-500 hover:bg-amber-600 text-white w-full font-poppins font-medium"
-                style={{ backgroundColor: theme.colors.primary[500] }}
-              >
-                Get Started
-              </Button>
+              <Link href="/coming-soon" passHref legacyBehavior>
+                <Button
+                  className="bg-amber-500 hover:bg-amber-600 text-white w-full font-poppins font-medium"
+                  style={{ backgroundColor: theme.colors.primary[500] }}
+                  as="a"
+                >
+                  Get Started
+                </Button>
+              </Link>
             </nav>
           </div>
         )}

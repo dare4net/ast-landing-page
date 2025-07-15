@@ -9,7 +9,8 @@ import { Mail } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
-import { addToWaitlist } from '@/lib/mock-api'
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 type MotionDivProps = HTMLMotionProps<"div"> & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 type MotionHeadingProps = HTMLMotionProps<"h1"> & DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
@@ -21,6 +22,23 @@ const MotionSpan = motion.span as React.FC<MotionSpanProps>
 
 interface FormData {
   email: string;
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+async function addToWaitlist(email: string) {
+  const response = await fetch(`${API_URL}/waitlist`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Something went wrong');
+  }
+  return response.json();
 }
 
 export default function ComingSoonPage() {
@@ -58,9 +76,13 @@ export default function ComingSoonPage() {
       await addToWaitlist(data.email)
       toast({
         title: "Success!",
-        description: "We'll notify you when we launch!",
+        description: "We'll notify you when we launch! Redirecting in 5 seconds...",
+        duration: 5000
       })
       reset()
+      setTimeout(() => {
+        window.location.href = 'https://after-school.tech'
+      }, 5000)
     } catch (error) {
       toast({
         title: "Error",
@@ -73,11 +95,14 @@ export default function ComingSoonPage() {
   }
 
   return (
-    <MotionDiv 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
-      className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted p-8"
-    >
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1 bg-gradient-to-b from-background to-muted">
+        <MotionDiv 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="flex min-h-full flex-col items-center justify-center p-8"
+        >
       <div className="text-center space-y-8 max-w-2xl mx-auto">
         <MotionH1 
           initial={{ y: 20, opacity: 0 }} 
@@ -163,5 +188,8 @@ export default function ComingSoonPage() {
         </div>
       </div>
     </MotionDiv>
+      </main>
+      <Footer />
+    </div>
   )
 }

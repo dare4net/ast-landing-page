@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import theme from "@/styles/theme"
+import Link from "next/link"
 
 export default function HeroCarousel() {
   const [activeSlide, setActiveSlide] = useState(0)
@@ -101,18 +102,24 @@ export default function HeroCarousel() {
           </h1>
           <p className="text-lg mb-8 font-poppins font-light">{slides[activeSlide].description}</p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              className="bg-amber-500 hover:bg-amber-600 text-white font-poppins font-medium"
-              style={{ backgroundColor: theme.colors.primary[500] }}
-            >
-              Sign up
-            </Button>
-            <Button
-              variant="outline"
-              className="bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white/20 font-poppins font-medium"
-            >
-              Learn More
-            </Button>
+            <Link href="/coming-soon" passHref legacyBehavior>
+              <Button
+                className="bg-amber-500 hover:bg-amber-600 text-white font-poppins font-medium"
+                style={{ backgroundColor: theme.colors.primary[500] }}
+                as="a"
+              >
+                Sign up
+              </Button>
+            </Link>
+            <Link href="/coming-soon" passHref legacyBehavior>
+              <Button
+                variant="outline"
+                className="bg-white/10 backdrop-blur-sm text-white border-white hover:bg-white/20 font-poppins font-medium"
+                as="a"
+              >
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

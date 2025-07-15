@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { motion, AnimatePresence } from 'framer-motion'
-import type { HTMLMotionProps } from 'framer-motion'
-import type { DetailedHTMLProps, HTMLAttributes } from 'react'
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { motion, AnimatePresence } from 'framer-motion'
+import type { HTMLMotionProps } from 'framer-motion'
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
+import { createBetaSignup } from '@/lib/mock-api'
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 import {
   Card,
   CardContent,
@@ -19,33 +20,6 @@ import {
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Loader2 } from 'lucide-react'
-const API_URL = process.env.NEXT_PUBLIC_API_URL
-
-// API functions for beta signups
-async function createBetaSignup(data: FormData) {
-  const response = await fetch(`${API_URL}/beta/signup`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Something went wrong')
-  }
-
-  return response.json()
-}
-
-async function getSpotCount() {
-  const response = await fetch(`${API_URL}/beta/spots`)
-  if (!response.ok) {
-    throw new Error('Failed to fetch remaining spots')
-  }
-  return response.json()
-}
 
 interface FormData {
   name: string
@@ -80,14 +54,12 @@ const ErrorAnimation: React.FC<ErrorAnimationProps> = ({ message }) => {
 
 export default function BetaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [spotsLeft, setSpotsLeft] = useState(TOTAL_SPOTS)
-
+  const [spotsLeft, setSpotsLeft] = useState(127)
   const { toast } = useToast()
   const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<FormData>()
   
   const progress = ((TOTAL_SPOTS - spotsLeft) / TOTAL_SPOTS) * 100
 
-  // Load saved form data
   useEffect(() => {
     const savedData = localStorage.getItem(STORAGE_KEY)
     if (savedData) {
@@ -97,20 +69,6 @@ export default function BetaPage() {
       })
     }
   }, [setValue])
-
-  // Fetch initial spot count
-  useEffect(() => {
-    fetch(`${API_URL}/beta/spots`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.spotsTaken !== undefined) {
-          setSpotsLeft(200 - data.spotsTaken)
-        }
-      })
-      .catch(error => {
-        console.error('Failed to fetch spot count:', error)
-      })
-  }, [])
 
   const handleInputChange = () => {
     const formEl = document.querySelector('form')
@@ -126,34 +84,14 @@ export default function BetaPage() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch(`${API_URL}/beta/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      const result = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to register')
-      }
-
-      if (result.spotsLeft !== undefined) {
-        setSpotsLeft(result.spotsLeft)
-      }
-
+      const result = await createBetaSignup(data)
+      setSpotsLeft(result.spotsLeft)
       localStorage.removeItem(STORAGE_KEY)
       toast({
         title: "Spot Reserved!",
-        description: "We'll be in touch soon with next steps. Redirecting in 5 seconds...",
-        duration: 5000
+        description: "We'll be in touch soon with next steps.",
       })
       reset()
-      setTimeout(() => {
-        window.location.href = 'https://after-school.tech'
-      }, 5000)
     } catch (error) {
       toast({
         title: "Error",

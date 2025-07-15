@@ -8,8 +8,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { motion, type HTMLMotionProps, type Variants, AnimatePresence } from 'framer-motion'
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
-import { createBetaInvite } from '@/lib/mock-api'
 import { Loader2 } from 'lucide-react'
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 import {
   Card,
   CardContent,
@@ -29,41 +30,19 @@ interface FormData {
   name: string
   email: string
   course: string
-  experience: string
-  goals: string
-  availability: string
+  otherCourse?: string
+  favColor?: string
+  nickname?: string
+  favFood?: string
 }
 
 const STORAGE_KEY = 'beta_invite_form_data'
 
 const courses = [
-  {
-    id: 'web-dev',
-    name: 'Web Development',
-    description: 'Learn HTML, CSS, JavaScript, and modern frameworks'
-  },
-  {
-    id: 'mobile-dev',
-    name: 'Mobile Development',
-    description: 'Build native mobile apps for iOS and Android'
-  },
-  {
-    id: 'data-science',
-    name: 'Data Science',
-    description: 'Master data analysis, visualization, and machine learning'
-  }
-]
-
-const experienceLevels = [
-  { id: 'beginner', label: 'Beginner' },
-  { id: 'intermediate', label: 'Intermediate' },
-  { id: 'advanced', label: 'Advanced' }
-]
-
-const availabilityOptions = [
-  { id: 'full-time', label: '40+ hours/week' },
-  { id: 'part-time', label: '20-40 hours/week' },
-  { id: 'flexible', label: '10-20 hours/week' }
+  { id: 'web-dev', name: 'Web Development' },
+  { id: 'mobile-dev', name: 'Mobile Development' },
+  { id: 'data-science', name: 'Data Science' },
+  { id: 'others', name: 'Others' }
 ]
 
 const container: Variants = {
@@ -120,10 +99,28 @@ const ErrorAnimation: React.FC<ErrorAnimationProps> = ({ message }) => {
   );
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+async function createBetaInvite(data: FormData) {
+  const response = await fetch(`${API_URL}/beta/invite`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Something went wrong');
+  }
+  return response.json();
+}
+
 export default function BetaInvitePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showOtherCourse, setShowOtherCourse] = useState(false)
   const { toast } = useToast()
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormData>()
+  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm<FormData>()
   
   // Load saved form data
   useEffect(() => {
@@ -142,22 +139,40 @@ export default function BetaInvitePage() {
       name: watch('name') || '',
       email: watch('email') || '',
       course: watch('course') || '',
-      experience: watch('experience') || '',
-      goals: watch('goals') || '',
-      availability: watch('availability') || ''
+      otherCourse: watch('otherCourse') || '',
+      favColor: watch('favColor') || '',
+      nickname: watch('nickname') || '',
+      favFood: watch('favFood') || ''
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData))
   }
   
+  // Watch course selection
+  useEffect(() => {
+    setShowOtherCourse(watch('course') === 'others')
+  }, [watch('course')])
+
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
     try {
-      await createBetaInvite(data)
-      localStorage.removeItem(STORAGE_KEY) // Clear saved data after successful submission
+      const submitData: any = {
+        ...data,
+        course: data.course === 'others' ? data.otherCourse : data.course
+      }
+      if (data.course !== 'others') {
+        delete submitData.otherCourse;
+      }
+      await createBetaInvite(submitData)
+      localStorage.removeItem(STORAGE_KEY)
       toast({
         title: "Application Received!",
-        description: "We'll review your application and get back to you soon.",
+        description: "We'll review your application and get back to you soon. Redirecting in 5 seconds...",
+        duration: 5000
       })
+      reset()
+      setTimeout(() => {
+        window.location.href = 'https://after-school.tech'
+      }, 5000)
     } catch (error) {
       toast({
         title: "Error",
@@ -170,8 +185,10 @@ export default function BetaInvitePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted p-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1 bg-gradient-to-b from-background to-muted p-8">
+        <div className="max-w-2xl mx-auto">
         <AnimatedElement variants={container}>
           <Card>
             <CardHeader>
@@ -198,7 +215,6 @@ export default function BetaInvitePage() {
                       {errors.name && <ErrorAnimation message={errors.name.message} />}
                     </AnimatePresence>
                   </div>
-                  
                   <div className="space-y-1">
                     <Input
                       type="email"
@@ -216,7 +232,6 @@ export default function BetaInvitePage() {
                       {errors.email && <ErrorAnimation message={errors.email.message} />}
                     </AnimatePresence>
                   </div>
-
                   <div className="space-y-1">
                     <Select 
                       value={watch('course')}
@@ -225,76 +240,59 @@ export default function BetaInvitePage() {
                         handleInputChange()
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="backdrop-blur bg-white/30 dark:bg-black/30">
                         <SelectValue placeholder="Select a course" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {courses.map((course) => (
-                          <SelectItem key={course.id} value={course.id}>
-                            <div className="space-y-1">
-                              <div className="font-medium">{course.name}</div>
-                              <p className="text-sm text-muted-foreground">{course.description}</p>
-                            </div>
+                      <SelectContent className="backdrop-blur bg-white/30 dark:bg-black/30">
+                        {courses.map((course, idx) => (
+                          <SelectItem key={course.id} value={course.id} className={idx !== 0 ? 'mt-2' : ''}>
+                            <div className="font-medium">{course.name}</div>
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
+                  {showOtherCourse && (
+                    <div className="space-y-1">
+                      <Input
+                        placeholder="Please specify your course"
+                        {...register('otherCourse', { required: 'Please specify your course' })}
+                        onChange={handleInputChange}
+                      />
+                      <AnimatePresence mode="wait">
+                        {errors.otherCourse && <ErrorAnimation message={errors.otherCourse.message} />}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </AnimatedElement>
 
-                  <div className="space-y-1">
-                    <Select 
-                      value={watch('experience')}
-                      onValueChange={(value) => {
-                        setValue('experience', value)
-                        handleInputChange()
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Your experience level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {experienceLevels.map((level) => (
-                          <SelectItem key={level.id} value={level.id}>
-                            {level.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                {/* New Section: Tell us about you */}
+                <div className="pt-6">
+                  <div className="mb-2">
+                    <div className="font-semibold text-lg">Let's Get to Know You</div>
+                    <div className="text-muted-foreground text-sm">We’d love to personalize your onboarding just for you 😊</div>
                   </div>
-
-                  <div className="space-y-1">
-                    <Textarea
-                      placeholder="What are your learning goals?"
-                      className="min-h-[100px]"
-                      {...register('goals', { required: 'Please share your goals' })}
+                  <div className="space-y-4">
+                    <Input
+                      placeholder="What's your Favorite Colour?"
+                      {...register('favColor')}
                       onChange={handleInputChange}
                     />
-                    <AnimatePresence mode="wait">
-                      {errors.goals && <ErrorAnimation message={errors.goals.message} />}
-                    </AnimatePresence>
+                    <Input
+                      placeholder="Do you have a Nickname?"
+                      {...register('nickname')}
+                      onChange={handleInputChange}
+                    />
+                    <Input
+                      placeholder="What's Your Favourite Food?"
+                      {...register('favFood')}
+                      onChange={handleInputChange}
+                    />
                   </div>
-
-                  <div className="space-y-1">
-                    <Select 
-                      value={watch('availability')}
-                      onValueChange={(value) => {
-                        setValue('availability', value)
-                        handleInputChange()
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Your weekly availability" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availabilityOptions.map((option) => (
-                          <SelectItem key={option.id} value={option.id}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    These are totally optional. If you prefer, we’ll give you a cool, general experience instead.
                   </div>
-                </AnimatedElement>
+                </div>
 
                 <AnimatedElement variants={item}>
                   <Button 
@@ -317,6 +315,8 @@ export default function BetaInvitePage() {
           </Card>
         </AnimatedElement>
       </div>
+      </main>
+      <Footer />
     </div>
   )
 }
